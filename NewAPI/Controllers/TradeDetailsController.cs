@@ -165,10 +165,6 @@ namespace NewAPI.Controllers
             {
               var stream = new MemoryStream(File.ReadAllBytes(pdfLocation));
               stream.Position = 0;
-              if (stream == null)
-              {
-                  return Request.CreateResponse(System.Net.HttpStatusCode.NotFound);
-              }
               response.Content = new StreamContent(stream);
               response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
               response.Content.Headers.ContentDisposition.FileName = pdfFile + ".pdf";
