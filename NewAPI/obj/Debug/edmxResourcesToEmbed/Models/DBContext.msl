@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="crudModelStoreContainer" CdmEntityContainer="crudEntities">
+    <EntitySetMapping Name="Trades">
+      <EntityTypeMapping TypeName="crudModel.Trade">
+        <MappingFragment StoreEntitySet="Trade">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="TradeName" ColumnName="TradeName" />
+          <ScalarProperty Name="TradeLevel" ColumnName="TradeLevel" />
+          <ScalarProperty Name="SyllabusName" ColumnName="SyllabusName" />
+          <ScalarProperty Name="SyllabusFilePath" ColumnName="SyllabusFilePath" />
+          <ScalarProperty Name="TestPlanFilePath" ColumnName="TestPlanFilePath" />
+          <ScalarProperty Name="ActiveDate" ColumnName="ActiveDate" />
+          <ScalarProperty Name="DevelopmentOfficer" ColumnName="DevelopmentOfficer" />
+          <ScalarProperty Name="Manager" ColumnName="Manager" />
+          <ScalarProperty Name="Languages" ColumnName="Languages" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

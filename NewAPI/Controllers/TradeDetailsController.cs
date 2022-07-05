@@ -159,7 +159,7 @@ namespace NewAPI.Controllers
             //Create HTTP Response.  
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
 
-            var pdfLocation = HostingEnvironment.MapPath("~/FileUpload/" + pdfFile + ".PDF");
+            var pdfLocation = HostingEnvironment.MapPath("~/FileUpload/" + pdfFile);
 
             try
             {
@@ -179,39 +179,6 @@ namespace NewAPI.Controllers
                 return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest);
                 
             }
-
-
-           
-            ////Set the File Path.  
-
-            //string filePath = System.Web.HttpContext.Current.Server.MapPath("~/uploads/") + pdfFile + ".pdf";
-
-            ////Check whether File exists.  
-
-            //if (!File.Exists(dir))
-            //{
-            //    //Throw 404 (Not Found) exception if File not found.
-  
-            //    response.StatusCode = HttpStatusCode.NotFound;
-            //    response.ReasonPhrase = string.Format("File not found: {0} .", pdfFile);
-            //    throw new HttpResponseException(response);
-            //}
-            ////Read the File into a Byte Array.  
-
-            //byte[] bytes = File.ReadAllBytes(filePath);
-            ////Set the Response Content.  
-
-            //response.Content = new ByteArrayContent(bytes);
-            ////Set the Response Content Length.  
-
-            //response.Content.Headers.ContentLength = bytes.LongLength;
-            ////Set the Content Disposition Header Value and FileName.  
-
-            //response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            //response.Content.Headers.ContentDisposition.FileName = pdfFile + ".pdf";
-            ////Set the File Content Type.  
-
-            //response.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(pdfFile + ".pdf"));
             return response;
         }
 
