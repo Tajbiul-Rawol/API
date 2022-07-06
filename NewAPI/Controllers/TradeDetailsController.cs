@@ -118,6 +118,117 @@ namespace NewAPI.Controllers
             }
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("UpdateTradeDetails")]
+        public IHttpActionResult UpdateFile()
+        {
+            string result = "";
+            try
+            {
+                var objEntity = new crudEntities();
+                string testPlanName = null;
+                string syllabusfileName = null;
+                var httpRequest = HttpContext.Current.Request;
+                var syllabusFile = httpRequest.Files["SyllabusFileUpload"];
+                var testPlanFile = httpRequest.Files["TestPlanFileUpload"];
+                var ID = Convert.ToInt32(httpRequest.Form["ID"]);
+
+                var objFile = objEntity.Trades.FirstOrDefault(t => t.ID == ID);
+                if (objFile == null)
+                {
+                    result = "Invalid data! Could not update";
+                    return Ok(result);
+                }
+                objFile.TradeName = httpRequest.Form["TradeName"];
+                objFile.TradeLevel = httpRequest.Form["TradeLevel"];
+                objFile.Languages = httpRequest.Form["Languages"];
+                objFile.DevelopmentOfficer = httpRequest.Form["DevelopmentOfficer"];
+                objFile.SyllabusName = httpRequest.Form["SyllabusName"];
+                objFile.Manager = httpRequest.Form["Manager"];
+
+                if (string.IsNullOrWhiteSpace(objFile.TradeName))
+                {
+                    result = "Pleae select a trade";
+                    return Ok(result);
+                }
+                if (string.IsNullOrWhiteSpace(objFile.TradeName))
+                {
+                    result = "Pleae select a level";
+                    return Ok(result);
+                }
+                if (string.IsNullOrWhiteSpace(objFile.TradeLevel))
+                {
+                    result = "Pleae select a TradeLevel";
+                    return Ok(result);
+                }
+
+                if (string.IsNullOrWhiteSpace(objFile.Languages))
+                {
+                    result = "Pleae select a Language";
+                    return Ok(result);
+                }
+                if (string.IsNullOrWhiteSpace(objFile.DevelopmentOfficer))
+                {
+                    result = "Pleae select a DevelopmentOfficer";
+                    return Ok(result);
+                }
+                if (string.IsNullOrWhiteSpace(objFile.Manager))
+                {
+                    result = "Pleae select a Manager";
+                    return Ok(result);
+                }
+                if (syllabusFile == null)
+                {
+                    result = "Pleae select a syllabus";
+                    return Ok(result);
+                }
+                if (testPlanFile == null)
+                {
+                    result = "Pleae select a testPlan";
+                    return Ok(result);
+                }
+                if (string.IsNullOrEmpty(httpRequest.Form["ActiveDate"]))
+                {
+                    result = "Pleae select a active date";
+                    return Ok(result);
+                }
+                objFile.ActiveDate = DateTime.Parse(httpRequest.Form["ActiveDate"]);
+
+                if (testPlanFile != null)
+                {
+                    testPlanName = new String(Path.GetFileNameWithoutExtension(testPlanFile.FileName).Take(10).ToArray()).Replace(" ", "-");
+                    testPlanName = testPlanName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(testPlanFile.FileName);
+                    var filePath = HttpContext.Current.Server.MapPath("~/FileUpload/" + testPlanName);
+                    testPlanFile.SaveAs(filePath);
+                }
+                if (syllabusFile != null)
+                {
+                    syllabusfileName = new String(Path.GetFileNameWithoutExtension(syllabusFile.FileName).Take(10).ToArray()).Replace(" ", "-");
+                    syllabusfileName = syllabusfileName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(syllabusFile.FileName);
+                    var filePath = HttpContext.Current.Server.MapPath("~/FileUpload/" + syllabusfileName);
+                    syllabusFile.SaveAs(filePath);
+                }
+                objFile.TestPlanFilePath = testPlanName;
+                objFile.SyllabusFilePath = syllabusfileName;
+                objFile.SyllabusName = syllabusfileName;
+                objEntity.Trades.Add(objFile);
+                int i = objEntity.SaveChanges();
+                if (i > 0)
+                {
+                    result = "File saved sucessfully";
+                }
+                else
+                {
+                    result = "File uploaded faild";
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Ok(result);
+        }
         [HttpGet]
         [Route("GetDetails")]
         public IHttpActionResult GetFile()
