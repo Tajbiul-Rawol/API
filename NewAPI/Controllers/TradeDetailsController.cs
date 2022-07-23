@@ -127,19 +127,14 @@ namespace NewAPI.Controllers
             try
             {
                 var objEntity = new crudEntities();
+                var objFile = new Trade();
                 string testPlanName = null;
                 string syllabusfileName = null;
                 var httpRequest = HttpContext.Current.Request;
                 var syllabusFile = httpRequest.Files["SyllabusFileUpload"];
                 var testPlanFile = httpRequest.Files["TestPlanFileUpload"];
-                var ID = Convert.ToInt32(httpRequest.Form["ID"]);
-
-                var objFile = objEntity.Trades.FirstOrDefault(t => t.ID == ID);
-                if (objFile == null)
-                {
-                    result = "Invalid data! Could not update";
-                    return Ok(result);
-                }
+                var ID = Int32.Parse(httpRequest.Form["ID"].ToString());
+                objFile.ID = ID;
                 objFile.TradeName = httpRequest.Form["TradeName"];
                 objFile.TradeLevel = httpRequest.Form["TradeLevel"];
                 objFile.Languages = httpRequest.Form["Languages"];
@@ -147,6 +142,11 @@ namespace NewAPI.Controllers
                 objFile.SyllabusName = httpRequest.Form["SyllabusName"];
                 objFile.Manager = httpRequest.Form["Manager"];
 
+                if (objFile.ID == null)
+                {
+                    result = "Pleae select a trade";
+                    return Ok(result);
+                }
                 if (string.IsNullOrWhiteSpace(objFile.TradeName))
                 {
                     result = "Pleae select a trade";
@@ -194,6 +194,15 @@ namespace NewAPI.Controllers
                     return Ok(result);
                 }
                 objFile.ActiveDate = DateTime.Parse(httpRequest.Form["ActiveDate"]);
+                var objToSave = objEntity.Trades.FirstOrDefault(o => o.ID == objFile.ID);
+
+                objToSave.TradeName = objFile.TradeName;
+                objToSave.TradeLevel = objFile.TradeLevel;
+                objToSave.Manager = objFile.Manager;
+                objToSave.Languages = objFile.Languages;
+                objToSave.DevelopmentOfficer = objFile.DevelopmentOfficer;
+                objToSave.SyllabusName = objFile.SyllabusName;
+                objToSave.ActiveDate = objFile.ActiveDate;
 
                 if (testPlanFile != null)
                 {
@@ -209,10 +218,10 @@ namespace NewAPI.Controllers
                     var filePath = HttpContext.Current.Server.MapPath("~/FileUpload/" + syllabusfileName);
                     syllabusFile.SaveAs(filePath);
                 }
-                objFile.TestPlanFilePath = testPlanName;
-                objFile.SyllabusFilePath = syllabusfileName;
-                objFile.SyllabusName = syllabusfileName;
-                objEntity.Trades.Add(objFile);
+
+                objToSave.TestPlanFilePath = testPlanName;
+                objToSave.SyllabusFilePath = syllabusfileName;
+
                 int i = objEntity.SaveChanges();
                 if (i > 0)
                 {
@@ -228,6 +237,7 @@ namespace NewAPI.Controllers
                 throw;
             }
             return Ok(result);
+
         }
         [HttpGet]
         [Route("GetDetails")]
