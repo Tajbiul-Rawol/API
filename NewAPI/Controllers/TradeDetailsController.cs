@@ -100,16 +100,15 @@ namespace NewAPI.Controllers
                 }
                 objFile.TestPlanFilePath = testPlanName;
                 objFile.SyllabusFilePath = syllabusfileName;
-                objFile.SyllabusName = syllabusfileName;
                 objEntity.Trades.Add(objFile);
                 int i = objEntity.SaveChanges();
                 if (i > 0)
                 {
-                    result = "File saved sucessfully";
+                    result = "Saved sucessfully";
                 }
                 else
                 {
-                    result = "File uploaded faild";
+                    result = "Save failed";
                 }
             }
             catch (Exception)
@@ -225,11 +224,11 @@ namespace NewAPI.Controllers
                 int i = objEntity.SaveChanges();
                 if (i > 0)
                 {
-                    result = "File saved sucessfully";
+                    result = "Updated sucessfully";
                 }
                 else
                 {
-                    result = "File uploaded faild";
+                    result = "Save failed";
                 }
             }
             catch (Exception)
@@ -241,7 +240,7 @@ namespace NewAPI.Controllers
         }
         [HttpGet]
         [Route("GetDetails")]
-        public IHttpActionResult GetFile()
+        public IHttpActionResult GetFile(int pageNumber,int pageSize)
         {
             var url = HttpContext.Current.Request.Url;
             IEnumerable<TradeDTO> lstFile = new List<TradeDTO>();
@@ -268,7 +267,9 @@ namespace NewAPI.Controllers
             {
                 throw;
             }
-            return Ok(lstFile);
+
+            var list = lstFile.Skip((pageNumber-1)*pageSize).Take(pageSize).ToList();
+            return Ok(list);
         }
 
         [HttpGet]
