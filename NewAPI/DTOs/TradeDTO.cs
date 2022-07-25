@@ -21,4 +21,15 @@ namespace NewAPI.DTOs
         public string Manager { get; set; }
 
     }
+
+    public class TradeDataDto
+    {
+        public List<TradeDTO> Trades { get; set; }
+        public int TotalTrades { get; set; }
+
+        public TradeDataDto()
+        {
+            this.Trades = new List<TradeDTO>();
+        }
+    }
 }

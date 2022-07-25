@@ -244,10 +244,11 @@ namespace NewAPI.Controllers
         {
             var url = HttpContext.Current.Request.Url;
             IEnumerable<TradeDTO> lstFile = new List<TradeDTO>();
+            var count = 0;
             try
             {
                 crudEntities objEntity = new crudEntities();
-                lstFile = objEntity.Trades.Select(a => new TradeDTO
+                lstFile = objEntity.Trades.AsNoTracking().Select(a => new TradeDTO
                 {
                     ID = a.ID,
                     TradeName = a.TradeName,
@@ -262,6 +263,8 @@ namespace NewAPI.Controllers
                     SyllabusFilePath = a.SyllabusFilePath,
                     TestPlanFilePath = a.TestPlanFilePath
                 }).ToList();
+
+               count = lstFile.Count();
             }
             catch (Exception)
             {
@@ -269,7 +272,13 @@ namespace NewAPI.Controllers
             }
 
             var list = lstFile.Skip((pageNumber-1)*pageSize).Take(pageSize).ToList();
-            return Ok(list);
+            TradeDataDto tradeList = new TradeDataDto();
+            foreach (var item in list)
+            {
+                tradeList.Trades.Add(item);
+            }
+            tradeList.TotalTrades = count;
+            return Ok(tradeList);
         }
 
         [HttpGet]
